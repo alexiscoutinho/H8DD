@@ -1,0 +1,10 @@
+rh8dd
+{
+	base		realism
+	maxplayers	4
+
+	DisplayTitle	"Realism Hard Eight Death's Door"
+	Description		"Hard Eight with Death's Door and Realism features."
+	Author			"২Vdark৩ and Jack Bauer ︻デ▬——"
+	Image			maps/any
+}
