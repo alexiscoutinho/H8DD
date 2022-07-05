@@ -1,16 +1,16 @@
 AddonInfo
 {
 	addonSteamAppID		550
-	addonTitle			"Realism Hard Eight Death's Door (new DD)"
-	addonVersion		2.0
-	addonAuthor			"২Vdark৩ and Jack Bauer ︻デ▬——"
-	addonAuthorSteamID	Vdark
-	addonURL0			https://steamcommunity.com/sharedfiles/filedetails/2268148914
+	addonTitle			"Hard Eight Death's Door (new DD)"
+	addonVersion		3.0
+	addonAuthor			"Jack Bauer ︻デ▬—— and ২Vdark৩"
+	addonAuthorSteamID	76561198046359406
+	addonSteamGroupName	Flemis
+	addonURL0			https://steamcommunity.com/sharedfiles/filedetails/2809141681
 	addonContent_Script	1
-	addonDescription	"Hard Eight+ with the new Death's Door features and Realism.
+	addonDescription	"Hard Eight with the new Death's Door features and Realism (optional).
 
-The internal mode name for use in the console is rh8dd."
-	addonDescription_PT	"Sofrendo em Dobro+ com características do novo Portão da Morte e Realismo.
+The internal mode names for use in the console are h8dd and rh8dd.
 
-O nome de modo interno para uso no console é rh8dd."
+Source: https://github.com/alexiscoutinho/H8DD"
 }

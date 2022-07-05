@@ -1,0 +1,10 @@
+h8dd
+{
+	base		coop
+	maxplayers	4
+
+	DisplayTitle	"Hard Eight Death's Door"
+	Description		"Hard Eight with Death's Door features."
+	Author			"Jack Bauer ︻デ▬——"
+	Image			maps/any
+}

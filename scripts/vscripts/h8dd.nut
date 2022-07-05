@@ -1,4 +1,4 @@
-printl("Activating Realism Hard Eight Death's Door")
+printl("Activating Hard Eight Death's Door")
 
 MutationOptions <- {
 	ActiveChallenge = 1
