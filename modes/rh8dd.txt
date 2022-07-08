@@ -5,6 +5,6 @@ rh8dd
 
 	DisplayTitle	"Realism Hard Eight Death's Door"
 	Description		"Hard Eight with Death's Door and Realism features."
-	Author			"Jack Bauer ︻デ▬——"
-	Image			maps/any
+	Author			"Jack Bauer ︻デ▬—— and ℜichard"
+	Image			vgui/rh8dd
 }

@@ -2,8 +2,8 @@ AddonInfo
 {
 	addonSteamAppID		550
 	addonTitle			"Hard Eight Death's Door (new DD)"
-	addonVersion		3.0
-	addonAuthor			"Jack Bauer ︻デ▬—— and ২Vdark৩"
+	addonVersion		3.1
+	addonAuthor			"Jack Bauer ︻デ▬—— and ℜichard"
 	addonAuthorSteamID	76561198046359406
 	addonSteamGroupName	Flemis
 	addonURL0			https://steamcommunity.com/sharedfiles/filedetails/2809141681

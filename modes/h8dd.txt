@@ -5,6 +5,6 @@ h8dd
 
 	DisplayTitle	"Hard Eight Death's Door"
 	Description		"Hard Eight with Death's Door features."
-	Author			"Jack Bauer ︻デ▬——"
-	Image			maps/any
+	Author			"Jack Bauer ︻デ▬—— and ℜichard"
+	Image			vgui/h8dd
 }
