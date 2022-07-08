@@ -102,14 +102,21 @@ function OnGameEvent_player_hurt_concise( params ) {
 
 	if (NetProps.GetPropInt( player, "m_bIsOnThirdStrike" ) == 0) {
 		local health = player.GetHealth()
+		local quarterHealth = player.GetMaxHealth() / 4
 
-		if (health < player.GetMaxHealth() / 4) {
-			player.SetReviveCount( 0 )
+		if (health + params.dmg_health >= quarterHealth) {
+			if (health < quarterHealth) {
+				player.SetReviveCount( 0 )
 
-			if (health > 1)
-				NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 0 )
-			else
-				NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
+				if (health > 1)
+					NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 0 )
+				else
+					NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
+			}
+		}
+		else if (health == 1) {
+			NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 1 )
+			NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
 		}
 	}
 }
