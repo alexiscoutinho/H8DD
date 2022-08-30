@@ -95,32 +95,6 @@ function OnGameEvent_player_left_safe_area( params ) {
 	DirectorOptions.TempHealthDecayRate = 0.27
 }
 
-function OnGameEvent_player_hurt_concise( params ) {
-	local player = GetPlayerFromUserID( params.userid )
-	if (!player || !player.IsSurvivor() || player.IsHangingFromLedge())
-		return
-
-	if (NetProps.GetPropInt( player, "m_bIsOnThirdStrike" ) == 0) {
-		local health = player.GetHealth()
-		local quarterHealth = player.GetMaxHealth() / 4
-
-		if (health + params.dmg_health >= quarterHealth) {
-			if (health < quarterHealth) {
-				player.SetReviveCount( 0 )
-
-				if (health > 1)
-					NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 0 )
-				else
-					NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
-			}
-		}
-		else if (health == 1) {
-			NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 1 )
-			NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
-		}
-	}
-}
-
 function OnGameEvent_defibrillator_used( params ) {
 	local player = GetPlayerFromUserID( params.subject )
 	if (!player || !player.IsSurvivor())
@@ -128,34 +102,6 @@ function OnGameEvent_defibrillator_used( params ) {
 
 	player.SetHealth( 1 )
 	player.SetHealthBuffer( 99 )
-	player.SetReviveCount( 0 )
-	NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
-}
-
-function CheckHealthAfterLedgeHang( userid ) {
-	local player = GetPlayerFromUserID( userid )
-	if (!player || !player.IsSurvivor())
-		return
-
-	local health = player.GetHealth()
-
-	if (health < player.GetMaxHealth() / 4) {
-		player.SetReviveCount( 0 )
-
-		if (health > 1)
-			NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 0 )
-		else
-			NetProps.SetPropInt( player, "m_isGoingToDie", 1 )
-	}
-}
-
-function OnGameEvent_revive_success( params ) {
-	local player = GetPlayerFromUserID( params.subject )
-	if (!params.ledge_hang || !player || !player.IsSurvivor())
-		return
-
-	if (NetProps.GetPropInt( player, "m_bIsOnThirdStrike" ) == 0)
-		EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.CheckHealthAfterLedgeHang(" + params.subject + ")", 0.1 )
 }
 
 function OnGameEvent_bot_player_replace( params ) {
@@ -167,6 +113,74 @@ function OnGameEvent_bot_player_replace( params ) {
 		StopSoundOn( "Player.Heartbeat", player )
 }
 
+function HealthEffectsThink() {
+	if (self.IsHangingFromLedge())
+		return
+
+	local health = self.GetHealth()
+
+	if (health >= self.GetMaxHealth() / 4) {
+		if (HeartbeatOn) {
+			StopSoundOn( "Player.Heartbeat", self )
+			HeartbeatOn = false
+
+			if (NetProps.GetPropInt( self, "m_bIsOnThirdStrike" ) == 1) {
+				NetProps.SetPropInt( self, "m_bIsOnThirdStrike", 0 )
+				NetProps.SetPropInt( self, "m_isGoingToDie", 0 )
+			}
+		}
+	}
+	else if (health > 1) {
+		if (!HeartbeatOn) {
+			EmitSoundOn( "Player.Heartbeat", self )
+			HeartbeatOn = true
+		}
+		else if (NetProps.GetPropInt( self, "m_bIsOnThirdStrike" ) == 1) {
+			NetProps.SetPropInt( self, "m_bIsOnThirdStrike", 0 )
+			NetProps.SetPropInt( self, "m_isGoingToDie", 0 )
+		}
+	}
+	else {
+		if (NetProps.GetPropInt( self, "m_bIsOnThirdStrike" ) == 0) {
+			NetProps.SetPropInt( self, "m_bIsOnThirdStrike", 1 )
+			NetProps.SetPropInt( self, "m_isGoingToDie", 1 )
+
+			if (!HeartbeatOn) {
+				EmitSoundOn( "Player.Heartbeat", self )
+				HeartbeatOn = true
+			}
+		}
+	}
+}
+
+function OnGameEvent_player_spawn( params ) {
+	local player = GetPlayerFromUserID( params.userid )
+	if (!player)
+		return
+
+	if (NetProps.GetPropInt( player, "m_iTeamNum" ) == 2) {
+		player.ValidateScriptScope()
+		local scope = player.GetScriptScope()
+		scope.HeartbeatOn <- false
+		scope["HealthEffectsThink"] <- HealthEffectsThink
+		AddThinkToEnt( player, "HealthEffectsThink" )
+	}
+}
+
+function OnGameEvent_player_death( params ) {
+	if (!("userid" in params))
+		return
+
+	local player = GetPlayerFromUserID( params.userid )
+	if (!player)
+		return
+
+	if (NetProps.GetPropInt( player, "m_iTeamNum" ) == 2) {
+		StopSoundOn( "Player.Heartbeat", player )
+		AddThinkToEnt( player, null )
+	}
+}
+
 if (!Director.IsSessionStartMap()) {
 	function PlayerSpawnDeadAfterTransition( userid ) {
 		local player = GetPlayerFromUserID( userid )
@@ -175,8 +189,6 @@ if (!Director.IsSessionStartMap()) {
 
 		player.SetHealth( 24 )
 		player.SetHealthBuffer( 26 )
-		player.SetReviveCount( 0 )
-		NetProps.SetPropInt( player, "m_bIsOnThirdStrike", 0 )
 	}
 
 	function PlayerSpawnAliveAfterTransition( userid ) {
