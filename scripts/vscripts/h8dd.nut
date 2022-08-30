@@ -132,7 +132,7 @@ function HealthEffectsThink() {
 	}
 	else if (health > 1) {
 		if (!HeartbeatOn) {
-			EmitSoundOn( "Player.Heartbeat", self )
+			EmitSoundOnClient( "Player.Heartbeat", self )
 			HeartbeatOn = true
 		}
 		else if (NetProps.GetPropInt( self, "m_bIsOnThirdStrike" ) == 1) {
@@ -146,7 +146,7 @@ function HealthEffectsThink() {
 			NetProps.SetPropInt( self, "m_isGoingToDie", 1 )
 
 			if (!HeartbeatOn) {
-				EmitSoundOn( "Player.Heartbeat", self )
+				EmitSoundOnClient( "Player.Heartbeat", self )
 				HeartbeatOn = true
 			}
 		}
