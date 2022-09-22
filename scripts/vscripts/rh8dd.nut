@@ -119,7 +119,8 @@ function OnGameEvent_bot_player_replace( params ) {
 		return
 
 	if (player.GetHealth() >= player.GetMaxHealth() / 4)
-		DoEntFire( "!self", "RunScriptCode", "StopSoundOn( \"Player.Heartbeat\", self )", 0.1, null, player ) // to work with sb_takecontrol
+		StopSoundOn( "Player.Heartbeat", player )
+//		DoEntFire( "!self", "RunScriptCode", "StopSoundOn( \"Player.Heartbeat\", self )", 0.1, null, player ) // to work with sb_takecontrol
 	else
 		player.GetScriptScope().HeartbeatOn = true
 }
