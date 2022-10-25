@@ -97,7 +97,7 @@ function OnGameEvent_player_left_safe_area( params ) {
 
 function OnGameEvent_defibrillator_used( params ) {
 	local player = GetPlayerFromUserID( params.subject )
-	if (!player || !player.IsSurvivor())
+	if (!player)
 		return
 
 	player.SetHealth( 1 )
@@ -109,7 +109,11 @@ function OnGameEvent_player_bot_replace( params ) {
 	if (!player)
 		return
 
-	StopSoundOn( "Player.Heartbeat", player )
+	local scope = player.GetScriptScope()
+	if (scope.HeartbeatOn) {
+		StopSoundOn( "Player.Heartbeat", player )
+		scope.HeartbeatOn = false
+	}
 	AddThinkToEnt( player, null )
 }
 
@@ -120,9 +124,8 @@ function OnGameEvent_bot_player_replace( params ) {
 
 	if (player.GetHealth() >= player.GetMaxHealth() / 4)
 		StopSoundOn( "Player.Heartbeat", player )
-//		DoEntFire( "!self", "RunScriptCode", "StopSoundOn( \"Player.Heartbeat\", self )", 0.1, null, player ) // to work with sb_takecontrol
 	else
-		player.GetScriptScope().HeartbeatOn = true
+		player.GetScriptScope().HeartbeatOn = true // unreliable if sb_takecontrol was used
 }
 
 function HealthEffectsThink() {
@@ -167,16 +170,16 @@ function HealthEffectsThink() {
 
 function OnGameEvent_player_spawn( params ) {
 	local player = GetPlayerFromUserID( params.userid )
-	if (!player)
+	if (!player || NetProps.GetPropInt( player, "m_iTeamNum" ) != 2)
 		return
 
-	if (player.IsSurvivor()) {
+	if (!player.GetScriptScope()) {
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 		scope.HeartbeatOn <- false
-		scope["HealthEffectsThink"] <- HealthEffectsThink
-		AddThinkToEnt( player, "HealthEffectsThink" )
+		scope.HealthEffectsThink <- HealthEffectsThink
 	}
+	AddThinkToEnt( player, "HealthEffectsThink" )
 }
 
 function OnGameEvent_player_death( params ) {
@@ -184,13 +187,15 @@ function OnGameEvent_player_death( params ) {
 		return
 
 	local player = GetPlayerFromUserID( params.userid )
-	if (!player)
+	if (!player || !player.IsSurvivor())
 		return
 
-	if (player.IsSurvivor()) {
+	local scope = player.GetScriptScope()
+	if (scope.HeartbeatOn) {
 		StopSoundOn( "Player.Heartbeat", player )
-		AddThinkToEnt( player, null )
+		scope.HeartbeatOn = false
 	}
+	AddThinkToEnt( player, null )
 }
 
 if (!Director.IsSessionStartMap()) {
@@ -230,8 +235,8 @@ if (!Director.IsSessionStartMap()) {
 			return
 
 		if (NetProps.GetPropInt( player, "m_lifeState" ) == 2)
-			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnDeadAfterTransition(" + params.userid + ")", 0.1 )
+			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnDeadAfterTransition(" + params.userid + ")", 0.0 )
 		else
-			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnAliveAfterTransition(" + params.userid + ")", 0.1 )
+			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnAliveAfterTransition(" + params.userid + ")", 0.0 )
 	}
 }
