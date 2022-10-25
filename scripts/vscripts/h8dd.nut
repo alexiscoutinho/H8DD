@@ -97,18 +97,20 @@ function OnGameEvent_player_left_safe_area( params ) {
 
 function OnGameEvent_defibrillator_used( params ) {
 	local player = GetPlayerFromUserID( params.subject )
-	if (!player)
+	if (!player) {
+		ClientPrint( null, 5, "ERROR:\x01 defibrillator_used" )
 		return
-
+	}
 	player.SetHealth( 1 )
 	player.SetHealthBuffer( 99 )
 }
 
 function OnGameEvent_player_bot_replace( params ) {
 	local player = GetPlayerFromUserID( params.player )
-	if (!player)
+	if (!player) {
+		ClientPrint( null, 5, "ERROR:\x01 player_bot_replace" )
 		return
-
+	}
 	local scope = player.GetScriptScope()
 	if (scope.HeartbeatOn) {
 		StopSoundOn( "Player.Heartbeat", player )
@@ -119,9 +121,10 @@ function OnGameEvent_player_bot_replace( params ) {
 
 function OnGameEvent_bot_player_replace( params ) {
 	local player = GetPlayerFromUserID( params.player )
-	if (!player)
+	if (!player) {
+		ClientPrint( null, 5, "ERROR:\x01 bot_player_replace" )
 		return
-
+	}
 	if (player.GetHealth() >= player.GetMaxHealth() / 4)
 		StopSoundOn( "Player.Heartbeat", player )
 	else
@@ -170,7 +173,11 @@ function HealthEffectsThink() {
 
 function OnGameEvent_player_spawn( params ) {
 	local player = GetPlayerFromUserID( params.userid )
-	if (!player || NetProps.GetPropInt( player, "m_iTeamNum" ) != 2)
+	if (!player) {
+		ClientPrint( null, 5, "ERROR:\x01 player_spawn" )
+		return
+	}
+	else if (NetProps.GetPropInt( player, "m_iTeamNum" ) != 2)
 		return
 
 	if (!player.GetScriptScope()) {
@@ -187,7 +194,11 @@ function OnGameEvent_player_death( params ) {
 		return
 
 	local player = GetPlayerFromUserID( params.userid )
-	if (!player || !player.IsSurvivor())
+	if (!player) {
+		ClientPrint( null, 5, "ERROR:\x01 player_death" )
+		return
+	}
+	else if (!player.IsSurvivor())
 		return
 
 	local scope = player.GetScriptScope()
@@ -201,18 +212,20 @@ function OnGameEvent_player_death( params ) {
 if (!Director.IsSessionStartMap()) {
 	function PlayerSpawnDeadAfterTransition( userid ) {
 		local player = GetPlayerFromUserID( userid )
-		if (!player)
+		if (!player) {
+			ClientPrint( null, 5, "ERROR:\x01 PlayerSpawnDeadAfterTransition" )
 			return
-
+		}
 		player.SetHealth( 24 )
 		player.SetHealthBuffer( 26 )
 	}
 
 	function PlayerSpawnAliveAfterTransition( userid ) {
 		local player = GetPlayerFromUserID( userid )
-		if (!player)
+		if (!player) {
+			ClientPrint( null, 5, "ERROR:\x01 PlayerSpawnAliveAfterTransition" )
 			return
-
+		}
 		local oldHealth = player.GetHealth()
 		local maxHeal = player.GetMaxHealth() / 2
 		local healAmount = 0
@@ -231,7 +244,11 @@ if (!Director.IsSessionStartMap()) {
 
 	function OnGameEvent_player_transitioned( params ) {
 		local player = GetPlayerFromUserID( params.userid )
-		if (!player || !player.IsSurvivor())
+		if (!player) {
+			ClientPrint( null, 5, "ERROR:\x01 player_transitioned" )
+			return
+		}
+		else if (!player.IsSurvivor())
 			return
 
 		if (NetProps.GetPropInt( player, "m_lifeState" ) == 2)
