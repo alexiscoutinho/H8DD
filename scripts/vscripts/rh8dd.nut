@@ -6,7 +6,7 @@ MutationOptions <- {
 	cm_SpecialRespawnInterval = 15
 	cm_MaxSpecials = 8
 	cm_BaseSpecialLimit = 2
-	cm_DominatorLimit = 8
+	DominatorLimit = 8
 
 	cm_ShouldHurry = true
 	cm_AllowPillConversion = false
@@ -252,8 +252,8 @@ if (!Director.IsSessionStartMap()) {
 			return
 
 		if (NetProps.GetPropInt( player, "m_lifeState" ) == 2)
-			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnDeadAfterTransition(" + params.userid + ")", 0.0 )
+			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnDeadAfterTransition(" + params.userid + ")" )
 		else
-			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnAliveAfterTransition(" + params.userid + ")", 0.0 )
+			EntFire( "worldspawn", "RunScriptCode", "g_ModeScript.PlayerSpawnAliveAfterTransition(" + params.userid + ")" )
 	}
 }

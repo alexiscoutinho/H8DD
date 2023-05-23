@@ -3,8 +3,11 @@ rh8dd
 	base		realism
 	maxplayers	4
 
-	DisplayTitle	"Realism Hard Eight Death's Door"
-	Description		"Hard Eight with Death's Door and Realism features."
-	Author			"Jack Bauer ︻デ▬—— and ℜichard"
-	Image			vgui/rh8dd
+	DisplayTitle		"Realism Hard Eight Death's Door"
+	ShortDescription	"Hard Eight with Death's Door and Realism features."
+	Description			"Hard Eight with Death's Door and Realism features.
+
+The internal mode name for use in the console is rh8dd."
+	Author				"Jack Bauer ︻デ▬—— and ℜichard"
+	Image				vgui/rh8dd
 }

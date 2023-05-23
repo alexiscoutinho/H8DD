@@ -2,15 +2,13 @@ AddonInfo
 {
 	addonSteamAppID		550
 	addonTitle			"Hard Eight Death's Door (new DD)"
-	addonVersion		3.6
+	addonVersion		3.7
 	addonAuthor			"Jack Bauer ︻デ▬—— and ℜichard"
 	addonAuthorSteamID	76561198046359406
 	addonSteamGroupName	Flemis
 	addonURL0			https://steamcommunity.com/sharedfiles/filedetails/2809141681
 	addonContent_Script	1
 	addonDescription	"Hard Eight with the new Death's Door features and Realism (optional).
-
-The internal mode names for use in the console are h8dd and rh8dd.
 
 Source: https://github.com/alexiscoutinho/H8DD"
 }
